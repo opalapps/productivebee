@@ -1,30 +1,25 @@
-def PrintUsage():
+import argparse
+parser = argparse.ArgumentParser(
+	description = 	"ProductiveBee v0.0.1 "
+		"code snippets generator by OpalApps: www.opalapps.com")
 
-	usageInfo = '''
-ProductiveBee v.0.0.1 by OpalApps <http://www.opalapps.com/productivebee.html>
-Generator of frequently used code snippets
-Usage: python test_template_gen.py <command> [options]
+parser.add_argument('command', type=str, nargs='?', 
+	choices = ["class", "project", "unittest"],
+	default = None, help="Command to be performed") 
+parser.add_argument('-d', type=str, nargs='?', metavar = "targetDir",
+	default = None, help="Target directory for generated files")
+parser.add_argument('-l', type=str, nargs='?', metavar = "progLang",
+	default = None, help = "Language the code should be generated in")
+parser.add_argument('-n', type=str, nargs='?', metavar = "className",
+	default = "GeneratedClass", 
+	help = "a class and eventualy a file name to be generated")
 
-Commands:
-	class    - Generates source and header files for the given class name
-	project  - Genrates makefie and source file with application entry point
-	unittest - Generates files for unit testing of class with given class name
-	help     - Prints the usage description
-	
-Options:
-	-d <dir_name> - specify output director, otherwise - use the current one 
-	-l <language> - specify the programming language {c|c++|python|java}
-	-n <name>     - specifies the class/file name, if needed by the command
-	-v            - provides verbose processing output, otherwise - silence
+import sys
+sys.exit(1)
 
-Examples:
-	busyant class -name MyClass -l c++
-		Creates MyClass.cpp / MyClass.h with class definition/declaration inside	
-
-	busyant project -name TestProject -l c++
-		Creates TestProject.cpp / Makefile that builds TestProject.cpp
-'''
-	print(usageInfo)
+if not command:
+	parser.print_help
+	sys.exit(-1)	
 
 settings = { 
 	"-d" 				: "",
@@ -35,11 +30,7 @@ settings = {
 
 import sys
 
-if len(sys.argv) < 3:
-	PrintUsage()
-	sys.exit(-1)
-
-if "-d" in sys.argv:
+if targetDir:
 	settings[ "-d" ] = sys.argv[ sys.argv.index("-d") + 1]
 
 if "--usage-info" in sys.argv:
